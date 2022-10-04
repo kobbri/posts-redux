@@ -2,7 +2,8 @@ import { createSlice, nanoid, createAsyncThunk } from "@reduxjs/toolkit";
 import { sub } from "date-fns";
 import axios from "axios";
 
-const POSTS_URL = "https://jsonplaceholder.typicode.com/posts";
+const POSTS_URL = "http://127.0.0.1:5050/SBD-Academy/api";
+
 
 const initialState = {
   posts: [],
@@ -10,9 +11,15 @@ const initialState = {
   error: null,
 };
 
-export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
-  const response = await axios.get(POSTS_URL);
-  return response.data;
+export const fetchPosts = createAsyncThunk("", async () => {
+  const token = window.localStorage.getItem('token')
+  const response = await axios.get(POSTS_URL + "/admins/get-posts/all", {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+  console.log(response.data.posts)
+  return response.data.posts;
 });
 
 export const addNewPost = createAsyncThunk('posts/addNewPost', async (initialPost) => {
